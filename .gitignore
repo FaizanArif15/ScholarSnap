@@ -1,2 +1,5 @@
-.env # credentials file
-.venv # virtual environment 
+# credentials file
+.env
+
+# virtual environment
+.venv  
