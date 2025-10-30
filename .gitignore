@@ -3,3 +3,6 @@
 
 # virtual environment
 .venv  
+
+# Downloaded Document Directory
+arxiv_papers
