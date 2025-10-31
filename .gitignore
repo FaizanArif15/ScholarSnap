@@ -4,11 +4,13 @@ credentials.json
 token.json
 
 # virtual environment
-.venv  
+.venv/
+.vscode/
 
 # Downloaded Document Directory
-arxiv_papers
+arxiv_papers/
 
+# log files
 __pycache__/
 *.pyc
 *.log
