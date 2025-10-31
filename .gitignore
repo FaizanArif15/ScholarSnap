@@ -12,5 +12,6 @@ arxiv_papers/
 
 # log files
 __pycache__/
+logs/
 *.pyc
 *.log
