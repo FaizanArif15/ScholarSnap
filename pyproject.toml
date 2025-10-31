@@ -7,6 +7,9 @@ requires-python = ">=3.12"
 dependencies = [
     "certifi>=2025.10.5",
     "feedparser>=6.0.12",
+    "google-api-python-client>=2.186.0",
+    "google-auth-httplib2>=0.2.1",
+    "google-auth-oauthlib>=1.2.3",
     "langchain>=1.0.3",
     "langchain-google-community[gmail]>=3.0.0",
     "langchain-openai>=1.0.1",
