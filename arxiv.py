@@ -4,6 +4,7 @@ import feedparser
 import os
 import certifi
 from pypdf import PdfReader
+import re
 
 
 def download_arxiv_paper(entry, download_dir="arxiv_papers"):
@@ -86,7 +87,8 @@ def search_arxiv_paper():
         # print(json.dumps(entry, indent=2))
         file_path = download_arxiv_paper(entry, download_dir="arxiv_papers")
         text = extract_pdf_text(file_path)
-        return text
+        title = re.sub(r"\s+", " ", entry.title).strip()
+        return text, title, entry.id
         
 
 if __name__ == "__main__":
