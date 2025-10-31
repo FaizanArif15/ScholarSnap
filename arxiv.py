@@ -11,6 +11,7 @@ def download_arxiv_paper(entry, download_dir="arxiv_papers"):
     """Download a single arXiv paper PDF efficiently and return path."""
     os.makedirs(download_dir, exist_ok=True)
     title = entry.title.replace("/", "-").replace(":", "-")
+    title = re.sub(r"\s+", " ", title).strip()
     pdf_url = entry.id.replace("abs", "pdf") + ".pdf"
     file_path = os.path.join(download_dir, f"{title}.pdf")
 

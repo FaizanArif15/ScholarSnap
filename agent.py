@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from arxiv import search_arxiv_paper
+from gmail_service import email_summary
 
 # Load environment variables
 load_dotenv()
@@ -32,15 +33,15 @@ def summarize_paper(paper_text: str, paper_title: str, paper_url: str) -> str:
             "4. Ends with a short note on why this research matters.\n\n"
             "Include a final section called '🔗 Paper Link' with the paper URL.\n\n"
             "Format your response like this:\n"
-            "### ✏️ Paper Title\n"
+            "✏️ Paper Title\n"
             "{paper_title}\n"
-            "### 🧠 Summary\n"
+            "🧠 Summary\n"
             "<your short, clear summary (150-200 words)>\n\n"
-            "### 🔑 Key Insights\n"
+            "🔑 Key Insights\n"
             "- Insight 1\n"
             "- Insight 2\n"
             "- Insight 3\n\n"
-            "### 🔗 Paper Link\n"
+            "🔗 Paper Link\n"
             "{paper_url}"
         ),
     )
@@ -60,12 +61,16 @@ def summarize_paper(paper_text: str, paper_title: str, paper_url: str) -> str:
 
 if __name__ == "__main__":
     
-
     print("📥 Fetching and extracting paper...")
     text, paper_title, paper_url = search_arxiv_paper()
 
     print("\n🤖 Generating summary")
     summary = summarize_paper(text, paper_title, paper_url)
+    
+    # After generating summary and getting paper title & URL
+    email_summary(summary, paper_title, [
+        "faizanarif1884@gmail.com",
+    ])
 
     print("\n🧾 Summary:\n")
     print(summary)
