@@ -1,5 +1,6 @@
-# credentials file
+# credential files
 .env
+credentials.json
 
 # virtual environment
 .venv  
