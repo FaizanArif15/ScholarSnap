@@ -8,3 +8,7 @@ token.json
 
 # Downloaded Document Directory
 arxiv_papers
+
+__pycache__/
+*.pyc
+*.log
