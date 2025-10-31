@@ -59,18 +59,29 @@ def summarize_paper(paper_text: str, paper_title: str, paper_url: str) -> str:
     return response.content
 
 
+
+def run_agent():
+    """Run the full fetch -> summarize -> email pipeline once."""
+    try:
+        print("📥 Fetching and extracting paper...")
+        text, paper_title, paper_url = search_arxiv_paper()
+
+        print("\n🤖 Generating summary")
+        summary = summarize_paper(text, paper_title, paper_url)
+        
+        notify_emails = os.getenv("NOTIFY_EMAIL", "")
+        recipients = [email.strip() for email in notify_emails.split(",") if email.strip()]
+
+        # Send email (ensure email_summary signature matches below)
+        email_summary(summary, paper_title, recipients)
+
+        print("\n🧾 Summary generated and emailed.")
+        return True
+    except Exception as e:
+        print(f"❌ run_agent failed: {e}")
+        return False
+
+
 if __name__ == "__main__":
     
-    print("📥 Fetching and extracting paper...")
-    text, paper_title, paper_url = search_arxiv_paper()
-
-    print("\n🤖 Generating summary")
-    summary = summarize_paper(text, paper_title, paper_url)
-    
-    # After generating summary and getting paper title & URL
-    email_summary(summary, paper_title, [
-        "faizanarif1884@gmail.com",
-    ])
-
-    print("\n🧾 Summary:\n")
-    print(summary)
+    run_agent()
