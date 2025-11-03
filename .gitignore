@@ -2,6 +2,7 @@
 .env
 credentials.json
 token.json
+docker-compose.override.yml
 
 # virtual environment
 .venv/
