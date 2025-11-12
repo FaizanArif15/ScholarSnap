@@ -15,24 +15,7 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 def get_gmail_service():
     """Authorize and return a Gmail API service."""
-    # creds = None
 
-    # # Load saved credentials if they exist
-    # if os.path.exists("token.json"):
-    #     creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-
-    # # If credentials are invalid or missing, run login flow
-    # if not creds or not creds.valid:
-    #     if creds and creds.expired and creds.refresh_token:
-    #         creds.refresh(Request())
-    #     else:
-    #         flow = InstalledAppFlow.from_client_secrets_file(
-    #             "credentials.json", SCOPES
-    #         )
-    #         creds = flow.run_local_server(port=0)
-    #     with open("token.json", "w") as token:
-    #         token.write(creds.to_json())
-    
     token_path = "token.json"
 
     if not os.path.exists(token_path):

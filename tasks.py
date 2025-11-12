@@ -6,16 +6,6 @@ from celery.utils.log import get_task_logger
 
 logger = get_task_logger(__name__)
 
-# @app.task
-# def run_agent_task():
-#     print("🚀 Initializing database...")
-#     init_db()
-#     print("🚀 Running scheduled task: run_agent")
-#     result = run_agent()
-#     print("✅ Task finished:", result)
-#     return result
-
-
 @app.task(
     
 )
