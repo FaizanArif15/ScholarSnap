@@ -5,11 +5,18 @@ import os
 import certifi
 from pypdf import PdfReader
 import re
+import shutil
 
 
 def download_arxiv_paper(entry, download_dir="arxiv_papers"):
     """Download a single arXiv paper PDF efficiently and return path."""
+    
+    # 🔄 Remove old folder if it exists, then recreate it
+    if os.path.exists(download_dir):
+        shutil.rmtree(download_dir)
     os.makedirs(download_dir, exist_ok=True)
+    os.chmod(download_dir, 0o777)
+    
     title = entry.title.replace("/", "-").replace(":", "-")
     title = re.sub(r"\s+", " ", title).strip()
     pdf_url = entry.id.replace("abs", "pdf") + ".pdf"

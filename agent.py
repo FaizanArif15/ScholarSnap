@@ -5,6 +5,8 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from arxiv import search_arxiv_paper
 from gmail_service import email_summary
+from db import log_email_sent, email_sent_today
+
 
 # Load environment variables
 load_dotenv()
@@ -59,27 +61,37 @@ def summarize_paper(paper_text: str, paper_title: str, paper_url: str) -> str:
     return response.content
 
 
-
 def run_agent():
     """Run the full fetch -> summarize -> email pipeline once."""
     try:
+        notify_emails = os.getenv("EMAIL_RECIPIENTS", "")
+        recipients = [email.strip() for email in notify_emails.split(",") if email.strip()]
+
+        # Check if any recipient already received an email today
+        for recipient in recipients:
+            if email_sent_today(recipient):
+                print(f"⏭️ Email already sent today to {recipient}, skipping run.")
+                return False
+
         print("📥 Fetching and extracting paper...")
         text, paper_title, paper_url = search_arxiv_paper()
 
         print("\n🤖 Generating summary")
         summary = summarize_paper(text, paper_title, paper_url)
-        
-        notify_emails = os.getenv("NOTIFY_EMAIL", "")
-        recipients = [email.strip() for email in notify_emails.split(",") if email.strip()]
 
-        # Send email (ensure email_summary signature matches below)
+        # Send email
         email_summary(summary, paper_title, recipients)
+
+        # Log to DB
+        for recipient in recipients:
+            log_email_sent(recipient, paper_title, paper_url, summary)
 
         print("\n🧾 Summary generated and emailed.")
         return True
     except Exception as e:
         print(f"❌ run_agent failed: {e}")
         return False
+
 
 
 if __name__ == "__main__":

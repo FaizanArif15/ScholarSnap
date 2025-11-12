@@ -15,23 +15,42 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 def get_gmail_service():
     """Authorize and return a Gmail API service."""
-    creds = None
+    # creds = None
 
-    # Load saved credentials if they exist
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    # # Load saved credentials if they exist
+    # if os.path.exists("token.json"):
+    #     creds = Credentials.from_authorized_user_file("token.json", SCOPES)
 
-    # If credentials are invalid or missing, run login flow
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials.json", SCOPES
-            )
-            creds = flow.run_local_server(port=0)
-        with open("token.json", "w") as token:
+    # # If credentials are invalid or missing, run login flow
+    # if not creds or not creds.valid:
+    #     if creds and creds.expired and creds.refresh_token:
+    #         creds.refresh(Request())
+    #     else:
+    #         flow = InstalledAppFlow.from_client_secrets_file(
+    #             "credentials.json", SCOPES
+    #         )
+    #         creds = flow.run_local_server(port=0)
+    #     with open("token.json", "w") as token:
+    #         token.write(creds.to_json())
+    
+    token_path = "token.json"
+
+    if not os.path.exists(token_path):
+        print("❌ token.json not found. Cannot refresh without existing token.")
+        sys.exit(1)
+
+    creds = Credentials.from_authorized_user_file(token_path, SCOPES)
+
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+        with open(token_path, "w") as token:
             token.write(creds.to_json())
+        print("✅ Gmail token refreshed successfully!")
+    elif creds and creds.valid:
+        print("✅ Token is still valid — no need to refresh.")
+    else:
+        print("⚠️ Cannot refresh token. Missing refresh_token or invalid credentials.")
+
 
     # Build Gmail API client with certifi SSL fix
     service = build("gmail", "v1", credentials=creds, cache_discovery=False)
@@ -93,7 +112,7 @@ def send_email(service, recipients, subject, body, sender="me"):
 
 def email_summary(summary_text, paper_title, recipients):
     """Utility to send a summary email."""
-    subject = f"🧠 Summary: {paper_title}"
+    subject = f"{paper_title}"
     body = f"{summary_text}\n"
 
     service = get_gmail_service()
